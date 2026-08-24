@@ -1,0 +1,32 @@
+*.db
+assets/external/
+.web
+.states
+reflex.lock/
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Secrets — NEVER commit these
+.env
+.streamlit/secrets.toml
+.spotify_cache
+.cache
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+.vscode/
+
+# Eval artifacts — dry runs use stub text, so their numbers are meaningless.
+# Real runs ARE worth committing: they're the evidence the harness was used.
+evals/results/*-dry.json

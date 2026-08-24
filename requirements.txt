@@ -1,0 +1,20 @@
+# Critique — Python dependencies
+# Tested on Python 3.14 (pyarrow 25+, streamlit 1.62+). Unpinned so Streamlit
+# Community Cloud can resolve compatible versions for whatever Python it runs.
+streamlit
+openai
+requests
+spotipy
+beautifulsoup4
+feedparser
+python-dotenv
+
+# --- FastAPI backend (api.py) ---
+# The Streamlit app still runs; these are only needed for the web frontend.
+fastapi
+uvicorn[standard]
+pydantic
+
+# --- Reflex Modern UI ---
+reflex
+

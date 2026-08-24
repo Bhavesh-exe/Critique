@@ -1,0 +1,1374 @@
+/* ============================================================================
+   CRITIQUE — "The Critic's Desk"
+   Editorial print aesthetic x analytical instrument.
+   Warm ink paper, Didone display, mono data, per-persona accent theming.
+   ========================================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Familjen+Grotesk:ital,wght@0,400..700;1,400..700&family=Grenze:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+/* Registered so the accent can INTERPOLATE when the persona changes,
+   instead of snapping. This is the signature transition of the whole UI. */
+@property --accent {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #ff5b2e;
+}
+
+:root {
+  /* --- surfaces: warm near-black, reads as printed matter not dashboard --- */
+  --ink:        #0a0908;
+  --ink-panel:  #100e0c;
+  --ink-raised: #17140f;
+  --ink-sunk:   #070605;
+
+  /* --- paper: bone, never pure white --- */
+  --paper:       #f4efe6;
+  --paper-dim:   #a9a094;
+  --paper-faint: #6d665c;
+
+  --rule:      rgba(244, 239, 230, 0.13);
+  --rule-soft: rgba(244, 239, 230, 0.07);
+
+  --accent: #ff5b2e;
+
+  --serif: 'Bodoni Moda', 'Times New Roman', serif;
+  --sans:  'Familjen Grotesk', 'Helvetica Neue', sans-serif;
+  --mono:  'IBM Plex Mono', ui-monospace, monospace;
+
+  --ease-out:  cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --shell: 900px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--ink);
+}
+
+/* Light mode overrides — warm archival parchment with crisp carbon typography */
+.light-mode,
+[data-theme="light"] {
+  --ink:        #fbf9f4 !important;       /* page: warm archival cream paper */
+  --ink-panel:  #f3eee4 !important;       /* panels: slightly deeper cream */
+  --ink-raised: #e8e0d0 !important;       /* raised / active */
+  --ink-sunk:   #ffffff !important;       /* inputs / sunken wells */
+
+  --paper:       #1a1815 !important;      /* text: deep carbon black */
+  --paper-dim:   #4e473d !important;      /* secondary text: warm charcoal */
+  --paper-faint: #847a6c !important;      /* faint / meta text: muted warm umber */
+
+  --rule:      rgba(26, 24, 21, 0.14) !important;
+  --rule-soft: rgba(26, 24, 21, 0.07) !important;
+  background-color: var(--ink) !important;
+  color: var(--paper) !important;
+}
+
+.light-mode ::selection {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.light-mode .panel {
+  background: linear-gradient(180deg, rgba(26, 24, 21, 0.02), transparent 40%), var(--ink-panel) !important;
+  border-color: var(--rule) !important;
+}
+
+.light-mode .tile {
+  background: var(--ink-sunk) !important;
+  border-color: var(--rule) !important;
+  color: var(--paper-dim) !important;
+}
+
+.light-mode .tile:hover {
+  color: var(--paper) !important;
+  border-color: rgba(26, 24, 21, 0.3) !important;
+}
+
+.light-mode .tile--on {
+  color: var(--paper) !important;
+  border-color: var(--accent) !important;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 12%, transparent), transparent 70%), var(--ink-raised) !important;
+}
+
+.light-mode .voice {
+  background: var(--ink-sunk) !important;
+  border-color: var(--rule) !important;
+}
+
+.light-mode .voice--on {
+  border-color: var(--own) !important;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--own) 16%, transparent), transparent 78%), var(--ink-raised) !important;
+}
+
+.light-mode .field {
+  background: var(--ink-sunk) !important;
+  border-color: var(--rule) !important;
+}
+
+.light-mode .field__input,
+.light-mode .field input,
+.light-mode .field .rt-TextFieldInput {
+  color: var(--paper) !important;
+}
+
+.light-mode .field input::placeholder,
+.light-mode .field .rt-TextFieldInput::placeholder,
+.light-mode .field__input::placeholder {
+  color: var(--paper-dim) !important;
+  opacity: 0.85 !important;
+}
+
+.light-mode .verdict {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 6%, transparent), transparent 34%), var(--ink-panel) !important;
+  border-color: var(--rule) !important;
+}
+
+.light-mode .ghost-btn {
+  border-color: var(--rule) !important;
+  color: var(--paper-dim) !important;
+}
+
+.light-mode .ghost-btn:hover {
+  color: #ffffff !important;
+  background: var(--accent) !important;
+}
+
+.light-mode .meter__track {
+  background: var(--ink-sunk) !important;
+  border-color: var(--rule) !important;
+}
+
+.light-mode .tag {
+  background: var(--ink-sunk) !important;
+  border-color: var(--rule) !important;
+  color: var(--paper-dim) !important;
+}
+
+.light-mode .appendix {
+  background: var(--ink-panel) !important;
+  border-color: var(--rule) !important;
+}
+
+.light-mode .appendix__pre {
+  background: var(--ink-sunk) !important;
+  border-color: var(--rule) !important;
+  color: var(--paper-dim) !important;
+}
+
+.light-mode .atmos__glow--a {
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 15%, transparent), transparent 68%) !important;
+}
+
+.light-mode .atmos__glow--b {
+  background: radial-gradient(circle, rgba(120, 108, 255, 0.08), transparent 68%) !important;
+}
+
+.light-mode .atmos__grid {
+  background-image: linear-gradient(90deg, rgba(26, 24, 21, 0.05) 0 1px, transparent 1px 100%) !important;
+}
+
+.light-mode .atmos__grain {
+  opacity: 0.03 !important;
+}
+
+/* Claude terminal style spinner */
+.claude-spinner {
+  display: inline-block;
+  font-family: var(--mono);
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: var(--accent);
+  animation: claude-spin 1.2s linear infinite;
+  margin-right: 0.4rem;
+}
+
+@keyframes claude-spin {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Theme toggle button in header */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.75rem;
+  background: var(--ink-sunk);
+  border: 1px solid var(--rule);
+  border-radius: 9999px;
+  color: var(--paper-dim);
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 240ms ease, border-color 240ms ease, transform 240ms var(--ease-out);
+}
+
+.theme-toggle:hover {
+  color: var(--paper);
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+
+/* ============================================================================
+   1. ATMOSPHERE — drifting glows + film grain, fixed behind everything
+   ========================================================================= */
+
+.atmos,
+.atmos__glow,
+.atmos__grain,
+.atmos__grid {
+  pointer-events: none !important;
+  user-select: none !important;
+}
+
+.atmos {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  contain: strict;
+  pointer-events: none !important;
+  z-index: -1 !important;
+}
+
+/* Ensure all decorative pseudo elements never block clicks */
+.panel::before,
+.panel::after,
+.tile::before,
+.tile::after,
+.voice::before,
+.voice::after,
+.file-btn::before,
+.file-btn::after,
+.verdict::before,
+.verdict::after,
+.verdict__scan {
+  pointer-events: none !important;
+}
+
+/* Ensure button child icons and spans pass clicks directly to the parent button */
+.tile > *,
+.voice > *,
+.theme-toggle > *,
+.file-btn > *,
+.ghost-btn > * {
+  pointer-events: none !important;
+}
+
+button,
+.tile,
+.voice,
+.theme-toggle,
+.file-btn,
+.ghost-btn {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  user-select: none;
+}
+
+.atmos__glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.45;
+  pointer-events: none !important;
+  transition: background 900ms linear;
+  will-change: transform;
+  contain: layout paint;
+}
+
+.atmos__glow--a {
+  width: 46vw;
+  height: 46vw;
+  top: -14vw;
+  left: -8vw;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 38%, transparent), transparent 68%);
+  animation: glow-drift-a 28s var(--ease-soft) infinite;
+}
+
+.atmos__glow--b {
+  width: 38vw;
+  height: 38vw;
+  bottom: -12vw;
+  right: -6vw;
+  background: radial-gradient(circle, rgba(120, 108, 255, 0.22), transparent 68%);
+  animation: glow-drift-b 34s var(--ease-soft) infinite;
+}
+
+/* Film grain. Static texture with no expensive runtime SVG turbulence re-render loop */
+.atmos__grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.045;
+  pointer-events: none !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Faint vertical column rules — the ghost of a print grid. */
+.atmos__grid {
+  position: absolute;
+  inset: 0;
+  max-width: var(--shell);
+  margin: 0 auto;
+  pointer-events: none !important;
+  background-image: linear-gradient(90deg, var(--rule-soft) 0 1px, transparent 1px 100%);
+  background-size: 25% 100%;
+  opacity: 0.6;
+}
+
+@keyframes glow-drift-a {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(6vw, 5vw, 0) scale(1.14); }
+}
+@keyframes glow-drift-b {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1.08); }
+  50%      { transform: translate3d(-5vw, -4vw, 0) scale(0.92); }
+}
+
+/* ============================================================================
+   2. SHELL
+   ========================================================================= */
+
+.shell {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: var(--shell);
+  margin: 0 auto;
+  padding: 4.5rem 1.5rem 3rem;
+  pointer-events: auto;
+}
+
+button,
+.tile,
+.voice,
+.theme-toggle,
+.file-btn,
+.ghost-btn,
+.appendix__summary {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+input,
+.field__input {
+  cursor: text !important;
+  user-select: text !important;
+  pointer-events: auto !important;
+}
+
+/* ============================================================================
+   3. ENTRANCE CHOREOGRAPHY — one orchestrated load, staggered by --d
+   ========================================================================= */
+
+.rise {
+  animation: rise 900ms var(--ease-out) both;
+  animation-delay: var(--d, 0ms);
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(18px); filter: blur(6px); }
+  to   { opacity: 1; transform: translateY(0);    filter: blur(0); }
+}
+
+/* Hairline rules draw themselves from the left. */
+.rule {
+  height: 1px;
+  width: 100%;
+  background: var(--rule);
+  transform-origin: left center;
+  animation: draw 1s var(--ease-out) both;
+  animation-delay: var(--d, 0ms);
+}
+
+.rule--accent { background: var(--accent); opacity: 0.55; }
+.rule--thick  { height: 2px; }
+
+@keyframes draw {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* ============================================================================
+   4. MASTHEAD
+   ========================================================================= */
+
+.kicker {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+}
+
+.kicker__accent { color: var(--accent); transition: color 700ms linear; }
+
+.wordmark {
+  margin: 0.9rem 0 0;
+  font-family: var(--serif);
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-size: clamp(3.6rem, 13vw, 8.4rem);
+  line-height: 0.86;
+  letter-spacing: -0.02em;
+  color: var(--paper);
+  animation: wordmark 1.5s var(--ease-out) 120ms both;
+}
+
+/* Letters settle inward from a wide track — the load moment people remember. */
+@keyframes wordmark {
+  from { opacity: 0; letter-spacing: 0.34em; filter: blur(9px); }
+  60%  { opacity: 1; }
+  to   { opacity: 1; letter-spacing: -0.02em; filter: blur(0); }
+}
+
+.wordmark em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent);
+  transition: color 700ms linear;
+}
+
+.standfirst {
+  max-width: 46ch;
+  margin: 1.1rem 0 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1rem, 2.2vw, 1.22rem);
+  line-height: 1.5;
+  color: var(--paper-dim);
+}
+
+/* ============================================================================
+   5. PANEL — the console / scorecard container
+   ========================================================================= */
+
+.panel {
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(244, 239, 230, 0.028), transparent 40%),
+    var(--ink-panel);
+  border: 1px solid var(--rule);
+  padding: 1.9rem;
+}
+
+/* Corner ticks — registration marks, like a print proof. */
+.panel::before,
+.panel::after {
+  content: '';
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border: 1px solid var(--accent);
+  opacity: 0.55;
+  transition: border-color 700ms linear;
+}
+.panel::before { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
+.panel::after  { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+  margin-bottom: 1rem;
+}
+
+.step__num {
+  color: var(--accent);
+  transition: color 700ms linear;
+}
+
+.step__line {
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+
+/* ============================================================================
+   6. PLATFORM TILES
+   ========================================================================= */
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.55rem;
+}
+
+.tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.85rem 0.9rem 0.95rem;
+  background: var(--ink-sunk);
+  border: 1px solid var(--rule);
+  color: var(--paper-dim);
+  font-family: var(--sans);
+  font-size: 0.86rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  overflow: hidden;
+  transition:
+    transform 320ms var(--ease-out),
+    border-color 320ms ease,
+    color 320ms ease,
+    background 320ms ease;
+}
+
+/* Accent underline grows from the left on hover. */
+.tile::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 0;
+  background: var(--accent);
+  transition: width 380ms var(--ease-out);
+}
+
+.tile:hover {
+  transform: translateY(-3px);
+  color: var(--paper);
+  border-color: rgba(244, 239, 230, 0.24);
+}
+.tile:hover::after { width: 100%; }
+
+.tile--on {
+  color: var(--paper);
+  border-color: var(--accent);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--accent) 12%, transparent), transparent 70%),
+    var(--ink-raised);
+}
+.tile--on::after { width: 100%; }
+
+.tile__icon {
+  color: var(--paper-faint);
+  transition: color 320ms ease;
+}
+.tile:hover .tile__icon { color: var(--paper-dim); }
+.tile--on .tile__icon   { color: var(--accent); }
+
+.tile__tag {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+}
+
+/* ============================================================================
+   7. IDENTIFIER INPUT
+   ========================================================================= */
+
+.field {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.9rem;
+  padding: 0 1rem;
+  min-height: 52px;
+  background: var(--ink-sunk);
+  border: 1px solid var(--rule);
+  transition: border-color 300ms ease, box-shadow 300ms ease;
+  width: 100%;
+}
+
+.field:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+.field__sigil {
+  font-family: var(--mono);
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--accent);
+  transition: color 700ms linear;
+  flex-shrink: 0;
+}
+
+.field__input,
+.field .rt-TextFieldRoot {
+  flex: 1;
+  min-width: 0;
+  width: 100% !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  color: var(--paper) !important;
+  font-family: var(--mono) !important;
+  font-size: 0.95rem !important;
+  letter-spacing: 0.01em;
+  height: auto !important;
+  min-height: 48px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.field input,
+.field .rt-TextFieldInput,
+.field__input input {
+  flex: 1;
+  width: 100% !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  color: var(--paper) !important;
+  font-family: var(--mono) !important;
+  font-size: 0.95rem !important;
+  letter-spacing: 0.01em;
+  padding: 0.75rem 0 !important;
+  height: auto !important;
+  min-height: 48px !important;
+  line-height: 1.5 !important;
+}
+
+.field input::placeholder,
+.field .rt-TextFieldInput::placeholder,
+.field__input::placeholder {
+  color: var(--paper-dim) !important;
+  opacity: 0.8 !important;
+}
+
+.note {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-top: 0.65rem;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  line-height: 1.6;
+  letter-spacing: 0.03em;
+  color: var(--paper-faint);
+}
+.note code {
+  color: var(--paper-dim);
+  background: var(--ink-sunk);
+  padding: 0.05rem 0.3rem;
+  border: 1px solid var(--rule);
+}
+
+/* ============================================================================
+   8. PERSONA CARDS — selecting one re-themes the entire page
+   ========================================================================= */
+
+.voices {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.5rem;
+}
+
+.voice {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.95rem 0.7rem 1rem;
+  background: var(--ink-sunk);
+  border: 1px solid var(--rule);
+  cursor: pointer;
+  text-align: left;
+  overflow: hidden;
+  transition:
+    transform 320ms var(--ease-out),
+    border-color 320ms ease,
+    background 320ms ease;
+}
+
+.voice:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--own) 55%, transparent);
+}
+
+.voice--on {
+  border-color: var(--own);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--own) 16%, transparent), transparent 78%),
+    var(--ink-raised);
+}
+
+/* Each persona flies its own colour as a top hairline, even when idle. */
+.voice::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--own);
+  opacity: 0.28;
+  transform: scaleX(0.18);
+  transform-origin: left center;
+  transition: transform 420ms var(--ease-out), opacity 320ms ease;
+}
+.voice:hover::before  { transform: scaleX(0.6); opacity: 0.6; }
+.voice--on::before    { transform: scaleX(1);   opacity: 1; }
+
+.voice__emoji {
+  font-size: 1.1rem;
+  line-height: 1;
+  filter: saturate(0.55) opacity(0.65);
+  transition: filter 320ms ease, transform 420ms var(--ease-out);
+}
+.voice--on .voice__emoji { filter: none; transform: scale(1.16); }
+
+.voice__name {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+  transition: color 320ms ease;
+}
+.voice--on .voice__name { color: var(--own); }
+
+.voice__blurb {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.86rem;
+  line-height: 1.32;
+  color: var(--paper-dim);
+  transition: color 320ms ease;
+}
+.voice--on .voice__blurb { color: var(--paper); }
+
+/* ============================================================================
+   9. PRIMARY ACTION
+   ========================================================================= */
+
+.file-btn {
+  position: relative;
+  width: 100%;
+  margin-top: 0.35rem;
+  padding: 1.15rem 1.5rem;
+  background: var(--accent);
+  border: 0;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  cursor: pointer;
+  overflow: hidden;
+  transition: background 700ms linear, transform 200ms var(--ease-out), filter 260ms ease;
+}
+
+/* Sheen sweep on hover. */
+.file-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 30%, rgba(255, 255, 255, 0.42) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 780ms var(--ease-out);
+}
+.file-btn:hover:not(:disabled)::before { transform: translateX(120%); }
+.file-btn:hover:not(:disabled)         { filter: brightness(1.08); }
+.file-btn:active:not(:disabled)        { transform: scale(0.988); }
+
+.file-btn:disabled {
+  cursor: progress;
+  background: var(--ink-raised);
+  color: var(--paper-dim);
+  border: 1px solid var(--rule);
+}
+
+.file-btn__inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+}
+
+/* ============================================================================
+   10. WORKING STATE — a machine visibly developing the verdict
+   ========================================================================= */
+
+.working { margin-top: 1.1rem; }
+
+.working__stage {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--paper-dim);
+  margin-bottom: 0.9rem;
+}
+
+.working__dot {
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: pulse 1.3s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1;   transform: scale(1); }
+  50%      { opacity: 0.3; transform: scale(0.62); }
+}
+
+.rail {
+  height: 2px;
+  background: var(--rule);
+  overflow: hidden;
+}
+
+.rail__run {
+  height: 100%;
+  width: 34%;
+  background: var(--accent);
+  animation: rail 1.5s var(--ease-soft) infinite;
+}
+
+@keyframes rail {
+  0%   { transform: translateX(-110%); }
+  100% { transform: translateX(400%); }
+}
+
+/* Shimmering skeleton lines standing in for the unwritten verdict. */
+.skel { margin-top: 1.4rem; display: grid; gap: 0.75rem; }
+
+.skel__line {
+  height: 0.72rem;
+  background: linear-gradient(
+    90deg,
+    var(--ink-raised) 0%,
+    rgba(244, 239, 230, 0.09) 45%,
+    var(--ink-raised) 90%
+  );
+  background-size: 220% 100%;
+  animation: shimmer 1.7s linear infinite;
+}
+.skel__line:nth-child(1) { width: 96%; animation-delay: 0ms; }
+.skel__line:nth-child(2) { width: 99%; animation-delay: 130ms; }
+.skel__line:nth-child(3) { width: 88%; animation-delay: 260ms; }
+.skel__line:nth-child(4) { width: 62%; animation-delay: 390ms; }
+
+@keyframes shimmer {
+  from { background-position: 120% 0; }
+  to   { background-position: -120% 0; }
+}
+
+/* ============================================================================
+   11. THE VERDICT — the payoff
+   ========================================================================= */
+
+.verdict {
+  position: relative;
+  margin-top: 1.6rem;
+  padding: 2.2rem 2.2rem 1.5rem;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--accent) 7%, transparent), transparent 34%),
+    var(--ink-panel);
+  border: 1px solid var(--rule);
+  overflow: hidden;
+  animation: verdict-in 1s var(--ease-out) both;
+}
+
+@keyframes verdict-in {
+  from { opacity: 0; transform: translateY(26px) scale(0.985); filter: blur(9px); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);     filter: blur(0); }
+}
+
+/* Accent bar draws down the left edge like a printer's mark. */
+.verdict::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--accent);
+  transform-origin: top center;
+  animation: draw-y 900ms var(--ease-out) 220ms both;
+}
+
+@keyframes draw-y {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+
+/* Single scan sweep — the page "develops". */
+.verdict__scan {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    transparent 38%,
+    color-mix(in srgb, var(--accent) 26%, transparent) 50%,
+    transparent 62%
+  );
+  animation: scan 1.5s var(--ease-soft) 180ms both;
+}
+
+@keyframes scan {
+  from { transform: translateX(-100%); opacity: 1; }
+  85%  { opacity: 1; }
+  to   { transform: translateX(100%);  opacity: 0; }
+}
+
+.verdict__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+}
+
+.verdict__stamp { color: var(--accent); transition: color 700ms linear; }
+
+.verdict__title {
+  margin: 0.7rem 0 1.3rem;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(1.7rem, 4.6vw, 2.5rem);
+  line-height: 1.06;
+  letter-spacing: -0.015em;
+  color: var(--paper);
+}
+.verdict__title em {
+  font-style: italic;
+  color: var(--accent);
+  transition: color 700ms linear;
+}
+
+/* The body copy: Grenze Regular - distinctive literary & editorial character. */
+.verdict__body {
+  margin: 1.4rem 0 0;
+  font-family: 'Grenze', serif;
+  font-weight: 400;
+  font-size: clamp(1.18rem, 2.1vw, 1.34rem);
+  line-height: 1.68;
+  letter-spacing: 0.015em;
+  color: color-mix(in srgb, var(--paper) 96%, transparent);
+  animation: rise 900ms var(--ease-out) 480ms both;
+}
+
+.verdict__body::first-letter {
+  font-size: inherit;
+  line-height: inherit;
+  font-weight: inherit;
+  float: none;
+  color: inherit;
+}
+
+.verdict__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.7rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+}
+
+.ghost-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  background: transparent;
+  border: 1px solid var(--rule);
+  color: var(--paper-dim);
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 260ms ease, border-color 260ms ease, background 260ms ease, transform 260ms var(--ease-out);
+}
+.ghost-btn:hover {
+  color: var(--ink);
+  background: var(--accent);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+/* ============================================================================
+   12. SCORECARD — meters + dotted-leader index rows
+   ========================================================================= */
+
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--paper-dim);
+  margin-bottom: 1.5rem;
+}
+.card-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+
+.meters { display: grid; gap: 1.6rem; }
+
+.meter__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.6rem;
+}
+
+.meter__label {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--paper-dim);
+}
+
+.meter__val {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 1.75rem;
+  line-height: 1;
+  color: var(--paper);
+  animation: rise 800ms var(--ease-out) 260ms both;
+}
+.meter__val small {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: var(--paper-faint);
+  margin-left: 0.25rem;
+}
+
+.meter__track {
+  position: relative;
+  height: 8px;
+  background: var(--ink-sunk);
+  border: 1px solid var(--rule);
+  overflow: hidden;
+}
+
+/* Instrument tick marks every 10%. */
+.meter__track::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--rule) 0 1px,
+    transparent 1px 10%
+  );
+  pointer-events: none;
+}
+
+.meter__fill {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--accent) 55%, transparent),
+    var(--accent)
+  );
+  box-shadow: 0 0 14px color-mix(in srgb, var(--accent) 55%, transparent);
+  animation: meter-fill 1.25s var(--ease-out) 320ms both;
+}
+
+@keyframes meter-fill {
+  from { width: 0; }
+  to   { width: var(--fill, 0%); }
+}
+
+.meter__scale {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+}
+.meter__scale b { color: var(--accent); font-weight: 500; transition: color 700ms linear; }
+
+/* Index rows with dotted leaders — a table of contents for your taste. */
+.index { display: grid; gap: 0; }
+
+.index__row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.62rem 0;
+  border-bottom: 1px solid var(--rule-soft);
+  animation: rise 700ms var(--ease-out) both;
+}
+.index__row:nth-child(1) { animation-delay: 340ms; }
+.index__row:nth-child(2) { animation-delay: 400ms; }
+.index__row:nth-child(3) { animation-delay: 460ms; }
+.index__row:nth-child(4) { animation-delay: 520ms; }
+.index__row:nth-child(5) { animation-delay: 580ms; }
+.index__row:nth-child(6) { animation-delay: 640ms; }
+.index__row:nth-child(n + 7) { animation-delay: 700ms; }
+
+.index__key {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--paper-dim);
+  white-space: nowrap;
+}
+
+.index__dots {
+  flex: 1;
+  min-width: 1.5rem;
+  border-bottom: 1px dotted var(--rule);
+  transform: translateY(-0.28em);
+}
+
+.index__val {
+  font-family: var(--serif);
+  font-size: 1rem;
+  color: var(--paper);
+  text-align: right;
+}
+
+/* Genre tags, popping in one after another. */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.tag {
+  padding: 0.34rem 0.7rem;
+  border: 1px solid var(--rule);
+  background: var(--ink-sunk);
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.09em;
+  color: var(--paper-dim);
+  animation: tag-pop 640ms var(--ease-out) both;
+  transition: color 260ms ease, border-color 260ms ease, transform 260ms var(--ease-out);
+}
+.tag:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+.tag:nth-child(1) { animation-delay: 420ms; }
+.tag:nth-child(2) { animation-delay: 480ms; }
+.tag:nth-child(3) { animation-delay: 540ms; }
+.tag:nth-child(4) { animation-delay: 600ms; }
+.tag:nth-child(5) { animation-delay: 660ms; }
+.tag:nth-child(6) { animation-delay: 720ms; }
+.tag:nth-child(7) { animation-delay: 780ms; }
+.tag:nth-child(n + 8) { animation-delay: 840ms; }
+
+/* First tag = dominant genre, marked. */
+.tag:first-child {
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
+@keyframes tag-pop {
+  from { opacity: 0; transform: translateY(8px) scale(0.94); }
+  to   { opacity: 1; transform: translateY(0)   scale(1); }
+}
+
+/* ============================================================================
+   13. ERROR SLIP — a rejection notice, not a toast
+   ========================================================================= */
+
+.slip {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  margin-bottom: 1.4rem;
+  padding: 1rem 1.15rem;
+  background: rgba(255, 91, 46, 0.07);
+  border: 1px solid rgba(255, 91, 46, 0.34);
+  border-left: 3px solid #ff5b2e;
+  animation: slip-in 520ms var(--ease-out) both;
+}
+
+@keyframes slip-in {
+  from { opacity: 0; transform: translateX(-14px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.slip__icon { color: #ff7b52; flex-shrink: 0; margin-top: 0.1rem; }
+
+.slip__label {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #ff7b52;
+  margin-bottom: 0.3rem;
+}
+
+.slip__msg {
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--paper-dim);
+}
+
+/* ============================================================================
+   14. APPENDIX — raw payload disclosure
+   ========================================================================= */
+
+.appendix {
+  margin-top: 1.1rem;
+  border: 1px solid var(--rule);
+  background: var(--ink-panel);
+}
+
+.appendix__summary {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 1rem 1.3rem;
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+  list-style: none;
+  transition: color 240ms ease;
+}
+.appendix__summary::-webkit-details-marker { display: none; }
+.appendix__summary:hover { color: var(--paper-dim); }
+
+.appendix__chev { transition: transform 340ms var(--ease-out); }
+.appendix[open] .appendix__chev { transform: rotate(90deg); }
+.appendix[open] .appendix__summary { color: var(--accent); }
+
+.appendix__body {
+  padding: 0 1.3rem 1.3rem;
+  animation: rise 480ms var(--ease-out) both;
+}
+
+.appendix__pre {
+  margin: 0;
+  padding: 1.1rem;
+  max-height: 340px;
+  overflow: auto;
+  background: var(--ink-sunk);
+  border: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  line-height: 1.75;
+  color: var(--paper-dim);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ============================================================================
+   15. COLOPHON
+   ========================================================================= */
+
+.colophon {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin-top: 3.5rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+}
+.colophon b { color: var(--paper-dim); font-weight: 500; }
+
+/* ============================================================================
+   16. RESPONSIVE
+   ========================================================================= */
+
+@media (max-width: 760px) {
+  .shell  { padding: 3rem 1.1rem 2.5rem; }
+  .panel  { padding: 1.35rem; }
+  .voices { grid-template-columns: repeat(2, 1fr); }
+  .tiles  { grid-template-columns: repeat(2, 1fr); }
+  .verdict { padding: 1.6rem 1.4rem 1.2rem; }
+  .atmos__grid { background-size: 50% 100%; }
+}
+
+@media (max-width: 430px) {
+  .voices { grid-template-columns: 1fr; }
+  .kicker { flex-direction: column; align-items: flex-start; gap: 0.3rem; }
+}
+
+/* ============================================================================
+   17. REDUCED MOTION — respect it fully
+   ========================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .meter__fill { width: var(--fill, 0%); }
+  .atmos__grain, .atmos__glow--a, .atmos__glow--b { animation: none !important; }
+}

@@ -1,0 +1,13 @@
+# Critique — Streamlit theme
+# A distinct dark look so the app doesn't read as "default Streamlit".
+[theme]
+base = "dark"
+primaryColor = "#ff5470"
+backgroundColor = "#0e0f14"
+secondaryBackgroundColor = "#191b24"
+textColor = "#f4f4f6"
+font = "sans serif"
+
+[server]
+# Keep the app snappy; no file-watcher noise in production.
+headless = true

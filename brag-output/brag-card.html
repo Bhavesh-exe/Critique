@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Critique — brag card</title>
+<style>
+  :root{
+    --ink:#0b0c10;
+    --panel:#12141b;
+    --panel2:#171a23;
+    --line:#252a38;
+    --text:#e7e9ee;
+    --dim:#8b93a7;
+    --ruby:#ff5470;
+    --good:#5ee6a8;
+    --warn:#ffc266;
+    --mono:ui-monospace,"SF Mono","Cascadia Mono","Roboto Mono",Menlo,Consolas,monospace;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:#06070a;
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;
+    display:flex;flex-direction:column;align-items:center;
+    padding:40px 20px;gap:20px;
+  }
+  .hint{color:var(--dim);font-size:12.5px;font-family:var(--mono);letter-spacing:.02em}
+  .hint b{color:var(--ruby);font-weight:600}
+
+  /* 1200x630 — standard social share ratio. Screenshot this element. */
+  .card{
+    width:1200px;height:630px;flex:none;
+    background:
+      radial-gradient(1100px 500px at 88% -12%, rgba(255,84,112,.16), transparent 60%),
+      radial-gradient(700px 400px at -8% 108%, rgba(94,230,168,.07), transparent 60%),
+      linear-gradient(155deg,#101219 0%,#0a0b10 100%);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:44px 52px;
+    display:grid;
+    grid-template-columns:1.06fr .94fr;
+    grid-template-rows:auto 1fr auto;
+    gap:0 46px;
+    position:relative;overflow:hidden;
+  }
+  .card::before{
+    content:"";position:absolute;inset:0;
+    background-image:linear-gradient(var(--line) 1px,transparent 1px),
+                     linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:44px 44px;opacity:.13;pointer-events:none;
+  }
+  .card > *{position:relative}
+
+  header{grid-column:1/-1;display:flex;align-items:baseline;gap:14px;margin-bottom:24px}
+  .mask{font-size:30px;line-height:1;filter:saturate(1.1)}
+  h1{font-family:var(--serif);font-size:40px;letter-spacing:-.018em;font-weight:600}
+  .tag{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ruby);border:1px solid rgba(255,84,112,.34);
+    padding:5px 11px;border-radius:999px;background:rgba(255,84,112,.07);
+  }
+  .spacer{flex:1}
+  .stack{font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.03em;text-align:right;line-height:1.6}
+
+  .lede{font-family:var(--serif);font-size:20.5px;line-height:1.5;color:#cfd4e0;max-width:36ch}
+  .lede em{color:var(--text);font-style:italic}
+  .lede .rule{color:var(--ruby);font-style:normal}
+
+  .kicker{
+    font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--dim);margin:26px 0 12px;display:flex;align-items:center;gap:9px;
+  }
+  .kicker::after{content:"";flex:1;height:1px;background:var(--line)}
+
+  .formula{
+    font-family:var(--mono);font-size:12.5px;color:#b9c0d0;
+    background:var(--panel);border:1px solid var(--line);border-left:2px solid var(--ruby);
+    border-radius:0 8px 8px 0;padding:13px 16px;line-height:1.55;
+  }
+  .formula span{color:var(--ruby)}
+
+  .platforms{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
+  .chip{
+    font-family:var(--mono);font-size:11px;color:#c3c9d8;
+    background:var(--panel2);border:1px solid var(--line);
+    padding:5px 10px;border-radius:6px;
+  }
+
+  /* right column */
+  .panel{
+    background:linear-gradient(180deg,rgba(23,26,35,.95),rgba(16,18,25,.95));
+    border:1px solid var(--line);border-radius:12px;padding:19px 21px;
+  }
+  .panel h2{
+    font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;
+    color:var(--dim);font-weight:500;margin-bottom:3px;
+  }
+  .panel .sub{font-size:11.5px;color:#6f7788;margin-bottom:15px;font-family:var(--mono)}
+
+  table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11.5px}
+  td{padding:6.5px 0;border-bottom:1px solid rgba(37,42,56,.7);vertical-align:middle}
+  tr:last-child td{border-bottom:none}
+  .case{color:#c8cedd}
+  .pass{color:var(--good);font-size:10px;letter-spacing:.06em;width:34px}
+  .num{text-align:right;color:var(--text);font-variant-numeric:tabular-nums;font-size:13px;width:52px}
+  .bar{width:74px;padding-left:12px}
+  .bar div{height:4px;border-radius:2px;background:rgba(255,84,112,.16);overflow:hidden}
+  .bar div i{display:block;height:100%;background:var(--ruby);border-radius:2px}
+
+  .verdict{
+    margin-top:15px;padding-top:14px;border-top:1px solid var(--line);
+    font-family:var(--mono);font-size:11px;color:var(--good);letter-spacing:.04em;
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .verdict b{color:var(--text);font-weight:500}
+
+  .pending{
+    margin-top:12px;font-family:var(--mono);font-size:10.5px;line-height:1.6;
+    color:#8a7a5c;background:rgba(255,194,102,.06);
+    border:1px solid rgba(255,194,102,.2);border-radius:8px;padding:10px 12px;
+  }
+  .pending b{color:var(--warn);font-weight:600}
+
+  footer{
+    grid-column:1/-1;display:flex;align-items:center;gap:22px;
+    margin-top:24px;padding-top:17px;border-top:1px solid var(--line);
+    font-family:var(--mono);font-size:11px;color:var(--dim);
+  }
+  footer .pipe{color:#c3c9d8;letter-spacing:.01em}
+  footer .pipe b{color:var(--ruby);font-weight:500}
+  footer .right{margin-left:auto;color:#5d6474}
+
+  @media print{body{padding:0;background:#fff}.hint{display:none}.card{border-radius:0}}
+</style>
+</head>
+<body>
+
+<div class="hint">Screenshot the card below at <b>1200&times;630</b> — sized for LinkedIn, X, and GitHub social preview.</div>
+
+<div class="card">
+
+  <header>
+    <span class="mask">&#127917;</span>
+    <h1>Critique</h1>
+    <span class="tag">LLM evaluation</span>
+    <span class="spacer"></span>
+    <span class="stack">Python &middot; FastAPI &middot; Reflex<br>6 platform APIs &middot; SSE streaming</span>
+  </header>
+
+  <!-- left column -->
+  <div>
+    <p class="lede">
+      Judges your media taste from <em>real</em> activity data across six platforms &mdash;
+      then <span class="rule">measures whether the model actually grounded its answer in that data.</span>
+    </p>
+
+    <div class="kicker">The headline metric</div>
+    <div class="formula">
+      reference_precision =<br>
+      &nbsp;&nbsp;<span>real_refs</span> / (<span>real_refs</span> + <span>invented_refs</span>)
+    </div>
+
+    <div class="kicker">Normalized into one data contract</div>
+    <div class="platforms">
+      <span class="chip">MyAnimeList</span><span class="chip">Last.fm</span><span class="chip">Spotify</span>
+      <span class="chip">Letterboxd</span><span class="chip">GitHub</span><span class="chip">Chess.com</span>
+    </div>
+  </div>
+
+  <!-- right column -->
+  <div class="panel">
+    <h2>Validating the evaluator</h2>
+    <div class="sub">python -m evals.run selftest</div>
+
+    <table>
+      <tr>
+        <td class="pass">PASS</td><td class="case">clean_grounded</td>
+        <td class="num">1.00</td><td class="bar"><div><i style="width:100%"></i></div></td>
+      </tr>
+      <tr>
+        <td class="pass">PASS</td><td class="case">recommend_five</td>
+        <td class="num">0.80</td><td class="bar"><div><i style="width:80%"></i></div></td>
+      </tr>
+      <tr>
+        <td class="pass">PASS</td><td class="case">hallucinating</td>
+        <td class="num">0.40</td><td class="bar"><div><i style="width:40%"></i></div></td>
+      </tr>
+      <tr>
+        <td class="pass">PASS</td><td class="case">recommend_bad_diagnosis</td>
+        <td class="num">0.33</td><td class="bar"><div><i style="width:33%"></i></div></td>
+      </tr>
+      <tr>
+        <td class="pass">PASS</td><td class="case">generic_ungrounded</td>
+        <td class="num">0.00</td><td class="bar"><div><i style="width:0"></i></div></td>
+      </tr>
+    </table>
+
+    <div class="verdict"><span>metric validation: OK</span><b>5 / 5 reproduced</b></div>
+
+    <div class="pending">
+      <b>Live model score: pending.</b> Fixtures and the metric are validated;
+      the prompt contract is being realigned before a score is published.
+    </div>
+  </div>
+
+  <footer>
+    <span class="pipe">fetch &rarr; normalize &rarr; <b>entropy + obscurity</b> &rarr; tone prompt &rarr; LLM &rarr; <b>score</b></span>
+    <span class="right">5 tones &middot; 25-cell eval matrix &middot; stdlib-only scorer</span>
+  </footer>
+
+</div>
+
+<div class="hint">Every number above is reproducible offline &mdash; no API keys, no network.</div>
+
+</body>
+</html>
